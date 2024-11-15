@@ -17,28 +17,29 @@ const ProcessStep: React.FC<ProcessStepProps> = ({
 }) => {
   return (
     <div 
-      className={` 
-        bg-gradient-to-br from-gray-800 via-gray-900 to-black rounded-xl p-6 border 
-        transition-all duration-300 cursor-pointer transform
-        ${isActive ? 'ring-2 ring-purple-500 shadow-purple-500/50 scale-105' : 'hover:shadow-purple-500/50 hover:border-purple-500'}
+      className={`
+        group relative rounded-none bg-black border ${isActive ? 'border-zinc-700' : 'border-zinc-800'} 
+        overflow-hidden transition-all duration-500 hover:border-zinc-700 hover:scale-[1.02]
+        p-6 cursor-pointer
+        ${isActive ? 'ring-1 ring-zinc-700 shadow-lg' : ''}
       `}
       onClick={onClick}
     >
       <div className="flex items-center gap-3 mb-4">
         <div className={`
           transition-colors duration-300
-          ${isActive ? 'text-purple-400' : 'text-gray-500'}
+          ${isActive ? 'text-white' : 'text-zinc-400'}
         `}>
           {icon}
         </div>
         <h3 className={`
           text-xl font-semibold transition-colors duration-300
-          ${isActive ? 'text-purple-300' : 'text-white'}
+          ${isActive ? 'text-white' : 'text-zinc-300'}
         `}>
           {title}
         </h3>
       </div>
-      <p className="text-gray-400">{description}</p>
+      <p className="text-zinc-400">{description}</p>
     </div>
   );
 };

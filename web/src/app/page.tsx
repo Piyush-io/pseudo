@@ -1,16 +1,16 @@
-'use client';
+"use client";
 
 /* eslint-disable @next/next/no-img-element */
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Brain, Zap, Code } from 'lucide-react';
+import { ArrowRight, Brain, Zap, Code } from "lucide-react";
 
 import { Code2, PenTool, Bot, Terminal, Play } from "lucide-react";
-import dynamic from 'next/dynamic';
+import dynamic from "next/dynamic";
 
 // Dynamically import Excalidraw to avoid SSR issues
 const ExcalidrawWrapper = dynamic(
-  async () => (await import('@/components/Canvas')).default,
+  async () => (await import("@/components/Canvas")).default,
   { ssr: false }
 );
 
@@ -25,21 +25,24 @@ const FEATURE_CARDS: Feature[] = [
   {
     icon: Brain,
     title: "Socratic Method",
-    description: "Guided learning through intelligent questioning and systematic discovery",
-    image: "vector-art-of-agora-of-socratic-method-minimal-sty.jpg"
+    description:
+      "Guided learning through intelligent questioning and systematic discovery",
+    image: "vector-art-of-agora-of-socratic-method-minimal-sty.jpg",
   },
   {
     icon: Zap,
     title: "Personalized Learning",
-    description: "Adaptive feedback and learning paths tailored to your unique progress",
-    image: "vector-art-of-personalized-learning-minimal-style-.jpg"
+    description:
+      "Adaptive feedback and learning paths tailored to your unique progress",
+    image: "vector-art-of-personalized-learning-minimal-style-.jpg",
   },
   {
     icon: Code,
     title: "Interactive Coding",
-    description: "Real-time code execution and testing in an immersive environment",
-    image: "vector-art-of-interactive-coding-environment-style.jpg"
-  }
+    description:
+      "Real-time code execution and testing in an immersive environment",
+    image: "vector-art-of-interactive-coding-environment-style.jpg",
+  },
 ];
 
 function InteractiveFeatureCard({ icon, title, description, image }: Feature) {
@@ -55,11 +58,12 @@ function InteractiveFeatureCard({ icon, title, description, image }: Feature) {
         {/* Gradient Overlay - Made stronger for better text readability */}
         <div className="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-transparent opacity-80" />
       </div>
-      
+
       {/* Content - Positioned at bottom */}
       <div className="absolute bottom-0 left-0 right-0 p-8">
         <div className="flex items-center space-x-3 mb-3">
-          {icon && React.createElement(icon, { className: "w-5 h-5 text-white" })}
+          {icon &&
+            React.createElement(icon, { className: "w-5 h-5 text-white" })}
           <h3 className="text-2xl font-medium text-white">{title}</h3>
         </div>
         <p className="text-sm text-zinc-300">{description}</p>
@@ -68,27 +72,31 @@ function InteractiveFeatureCard({ icon, title, description, image }: Feature) {
   );
 }
 
-function GravityField({ mousePosition }: { mousePosition: { x: number, y: number } }) {
+function GravityField({
+  mousePosition,
+}: {
+  mousePosition: { x: number; y: number };
+}) {
   return (
     <div className="absolute inset-0">
       {/* Base Grid */}
-      <div 
-        className="absolute inset-0 opacity-20"
+      <div
+        className="absolute inset-0 opacity-10"
         style={{
           backgroundImage: `
             linear-gradient(to right, rgb(64, 64, 64) 1px, transparent 1px),
             linear-gradient(to bottom, rgb(64, 64, 64) 1px, transparent 1px)
           `,
-          backgroundSize: '40px 40px',
+          backgroundSize: "40px 40px",
         }}
       />
-      
+
       {/* Mouse Follow Effect */}
-      <div 
+      <div
         className="absolute inset-0"
         style={{
           background: `radial-gradient(circle 250px at ${mousePosition.x}px ${mousePosition.y}px, rgba(255,255,255,0.03), transparent)`,
-          transition: 'all 0.15s ease-out',
+          transition: "all 0.15s ease-out",
         }}
       />
     </div>
@@ -104,19 +112,22 @@ export default function Home() {
       setIsAtTop(window.scrollY < 100);
     };
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   const handleMouseMove = (e: React.MouseEvent) => {
     setMousePosition({
       x: e.clientX,
-      y: e.clientY
+      y: e.clientY,
     });
   };
 
   return (
-    <main className="min-h-screen bg-black text-white" onMouseMove={handleMouseMove}>
+    <main
+      className="min-h-screen bg-black text-white"
+      onMouseMove={handleMouseMove}
+    >
       <div className="relative min-h-screen flex flex-col items-center">
         {/* Single Background Grid */}
         <GravityField mousePosition={mousePosition} />
@@ -135,12 +146,13 @@ export default function Home() {
                     className="h-16"
                   />
                 </div>
-                
+
                 <p className="text-xl text-zinc-400 font-light tracking-wide max-w-2xl mx-auto mb-8">
-                  Master Computer Science through AI-powered Socratic questioning.
+                  Master Computer Science through AI-powered Socratic
+                  questioning.
                 </p>
-                
-                <div className="flex justify-center"> 
+
+                <div className="flex justify-center">
                   <a href="/main">
                     <Button className="bg-white text-black hover:bg-zinc-200 font-medium px-8 py-6 rounded-lg transition duration-300 flex items-center text-sm">
                       Start Learning
@@ -167,7 +179,9 @@ export default function Home() {
                       <div className="flex items-center justify-between mb-4">
                         <div className="flex items-center space-x-3">
                           <Code className="w-4 h-4 text-zinc-400" />
-                          <span className="text-sm font-medium text-zinc-300">Code Editor</span>
+                          <span className="text-sm font-medium text-zinc-300">
+                            Code Editor
+                          </span>
                         </div>
                       </div>
                       <pre className="font-mono text-sm text-zinc-300 bg-zinc-900/50 p-4 rounded-lg">
@@ -191,22 +205,65 @@ export default function Home() {
                       <div className="border-b border-zinc-800">
                         <div className="flex items-center space-x-3 px-6 py-3 border-b border-zinc-800">
                           <PenTool className="w-4 h-4 text-zinc-400" />
-                          <span className="text-sm font-medium text-zinc-300">Visual Canvas</span>
+                          <span className="text-sm font-medium text-zinc-300">
+                            Visual Canvas
+                          </span>
                         </div>
                         <div className="h-[200px] w-full bg-zinc-900/50 p-4">
                           {/* Visual representation of a binary search tree */}
                           <div className="h-full w-full flex items-center justify-center">
                             <div className="relative">
                               {/* Simple visual representation */}
-                              <svg width="200" height="120" viewBox="0 0 200 120" className="text-zinc-600">
-                                <line x1="100" y1="20" x2="50" y2="60" stroke="currentColor" />
-                                <line x1="100" y1="20" x2="150" y2="60" stroke="currentColor" />
-                                <circle cx="100" cy="20" r="15" fill="currentColor" opacity="0.2" />
-                                <circle cx="50" cy="60" r="15" fill="currentColor" opacity="0.2" />
-                                <circle cx="150" cy="60" r="15" fill="currentColor" opacity="0.2" />
-                                <text x="95" y="25" fill="white" fontSize="12">8</text>
-                                <text x="45" y="65" fill="white" fontSize="12">4</text>
-                                <text x="145" y="65" fill="white" fontSize="12">12</text>
+                              <svg
+                                width="200"
+                                height="120"
+                                viewBox="0 0 200 120"
+                                className="text-zinc-600"
+                              >
+                                <line
+                                  x1="100"
+                                  y1="20"
+                                  x2="50"
+                                  y2="60"
+                                  stroke="currentColor"
+                                />
+                                <line
+                                  x1="100"
+                                  y1="20"
+                                  x2="150"
+                                  y2="60"
+                                  stroke="currentColor"
+                                />
+                                <circle
+                                  cx="100"
+                                  cy="20"
+                                  r="15"
+                                  fill="currentColor"
+                                  opacity="0.2"
+                                />
+                                <circle
+                                  cx="50"
+                                  cy="60"
+                                  r="15"
+                                  fill="currentColor"
+                                  opacity="0.2"
+                                />
+                                <circle
+                                  cx="150"
+                                  cy="60"
+                                  r="15"
+                                  fill="currentColor"
+                                  opacity="0.2"
+                                />
+                                <text x="95" y="25" fill="white" fontSize="12">
+                                  8
+                                </text>
+                                <text x="45" y="65" fill="white" fontSize="12">
+                                  4
+                                </text>
+                                <text x="145" y="65" fill="white" fontSize="12">
+                                  12
+                                </text>
                               </svg>
                               {/* Animated cursor dot */}
                               <div className="absolute top-0 right-0 w-2 h-2 bg-blue-400 rounded-full animate-pulse" />
@@ -219,11 +276,14 @@ export default function Home() {
                       <div className="flex-1">
                         <div className="flex items-center space-x-3 px-6 py-3 border-b border-zinc-800">
                           <Bot className="w-4 h-4 text-zinc-400" />
-                          <span className="text-sm font-medium text-zinc-300">AI Assistant</span>
+                          <span className="text-sm font-medium text-zinc-300">
+                            AI Assistant
+                          </span>
                         </div>
                         <div className="p-6">
                           <p className="text-sm text-zinc-400">
-                            Let's explore how binary search works. What happens if we search for a number that's not in the array?
+                            Let's explore how binary search works. What happens
+                            if we search for a number that's not in the array?
                           </p>
                           <div className="flex items-center space-x-2 mt-4 text-zinc-500">
                             <Terminal className="w-4 h-4" />
@@ -240,12 +300,16 @@ export default function Home() {
         </div>
 
         {/* Scroll Indicator */}
-        <div 
+        <div
           className={`
             fixed bottom-8 left-1/2 -translate-x-1/2 
             flex flex-col items-center text-zinc-500 
             transition-all duration-500 ease-in-out
-            ${isAtTop ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10 pointer-events-none'}
+            ${
+              isAtTop
+                ? "opacity-100 translate-y-0"
+                : "opacity-0 translate-y-10 pointer-events-none"
+            }
           `}
         >
           <span className="text-xs mb-2">Scroll to explore features</span>

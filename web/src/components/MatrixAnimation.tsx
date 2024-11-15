@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState, useEffect } from 'react';
 
 interface MatrixAnimationProps {
@@ -7,49 +9,47 @@ interface MatrixAnimationProps {
   isActive?: boolean;
 }
 
-const MatrixAnimation: React.FC<MatrixAnimationProps> = ({ rows, cols, highlight, isActive }) => {
-  const [values, setValues] = useState<number[][]>([]);
+const MatrixAnimation: React.FC<MatrixAnimationProps> = ({ 
+  rows, 
+  cols, 
+  highlight = false,
+  isActive = false 
+}) => {
+  const [matrix, setMatrix] = useState<string[][]>([]);
 
   useEffect(() => {
-    const newValues = Array(rows)
-      .fill(0)
-      .map(() =>
-        Array(cols)
-          .fill(0)
-          .map(() => parseFloat(Math.random().toFixed(1)))
-      );
-    setValues(newValues);
-  }, [rows, cols, isActive]);
+    // Generate matrix only on client side
+    const newMatrix = Array(rows).fill(0).map(() => 
+      Array(cols).fill(0).map(() => Math.random().toFixed(1))
+    );
+    setMatrix(newMatrix);
+  }, [rows, cols]);
 
-  const baseClasses = "grid transition-all duration-500";
-  const highlightClasses = highlight
-    ? "bg-blue-100 border-blue-400 shadow-lg"
-    : "bg-gray-50 border-gray-200";
-  const activeClasses = isActive ? "scale-105 shadow-xl" : "scale-100";
+  if (matrix.length === 0) {
+    return null; // Return null during initial render
+  }
 
   return (
-    <div
-      className={`
-        ${baseClasses}
-        ${highlightClasses}
-        ${activeClasses}
-        border rounded-lg p-1
-      `}
-      style={{
-        gridTemplateColumns: `repeat(${cols}, 1fr)` // Ensure correct number of columns
-      }}
-    >
-      {values.flat().map((value, i) => (
-        <div
-          key={i}
-          className={`
-            aspect-square border border-opacity-20 
-            rounded-sm flex items-center justify-center 
-            text-xs font-mono transition-all duration-300
-            ${isActive ? 'text-blue-600 font-bold' : 'text-gray-600'}
-          `}
-        >
-          {value}
+    <div className="font-mono text-xs">
+      {matrix.map((row, i) => (
+        <div key={i} className="flex justify-center space-x-2">
+          {row.map((value, j) => (
+            <span 
+              key={j}
+              className={`
+                w-6 h-6 flex items-center justify-center
+                transition-colors duration-300
+                ${highlight 
+                  ? isActive 
+                    ? 'text-white' 
+                    : 'text-zinc-400'
+                  : 'text-zinc-600'
+                }
+              `}
+            >
+              {value}
+            </span>
+          ))}
         </div>
       ))}
     </div>
