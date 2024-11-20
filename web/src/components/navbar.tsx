@@ -1,66 +1,73 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
+import React, { useState, useEffect } from 'react';
+import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import Link from "next/link";
-import { Menu, X, ChevronDown } from "lucide-react";
-import { useAuth } from "@/context/AuthContext";
-import { useSession, signOut } from "next-auth/react";
-import { useRouter } from "next/navigation";
+} from '@/components/ui/dropdown-menu';
+import Link from 'next/link';
+import { Menu, X, ChevronDown } from 'lucide-react';
+import { useAuth } from '@/context/AuthContext';
+import { useSession, signOut } from 'next-auth/react'; 
+import { useRouter } from 'next/navigation';
 
+// Import a cool font from Google Fonts
+import '@fontsource/jetbrains-mono'; // Or any other font suitable to your theme
+
+// Define navigation items with categories
 const navItems = [
-  { name: "Socrator", href: "/main" },
-  { name: "Code Analyzer", href: "/analyzer" },
+  { name: 'Socrator', href: '/main' },
   {
-    category: "Features",
+    category: 'Features',
     items: [
-      { name: "DSA's Roadmap", href: "/roadmap" },
-      { name: "Algorithms", href: "/algovisualise" },
-      { name: "LLM's", href: "/visualizer" },
+      { name: 'Code Analyser', href: '/analyzer' },
+      { name: "Algorithm's Visualisation", href: '/algovisualise' },
+      { name: "LLM's Visualisation", href: '/visualizer' },
+      { name: "DSA's Roadmap", href: '/roadmap' },
     ],
   },
   {
-    category: "More",
+    category: 'More',
     items: [
-      { name: "Dashboard", href: "/u/dashboard" },
-      { name: "About", href: "/aboutus" },
+      { name: 'User Dashboard', href: '/u/dashboard' },
+      { name: 'About Us', href: '/aboutus' },
     ],
   },
+  
 ];
 
 const Navbar: React.FC = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false);
   const [isScrolled, setIsScrolled] = useState<boolean>(false);
-  const [isVisible, setIsVisible] = useState<boolean>(true);
-  const [lastScrollY, setLastScrollY] = useState<number>(0);
-  const { loading } = useAuth();
+  const { loading } = useAuth(); 
   const { data: session, status } = useSession();
   const router = useRouter();
 
   useEffect(() => {
     const handleScroll = () => {
-      const currentScrollY = window.scrollY;
-      setIsScrolled(currentScrollY > 0);
-
-      // Hide navbar when scrolling down, show when scrolling up
-      if (currentScrollY > lastScrollY) {
-        setIsVisible(false);
+      if (window.scrollY > 0) {
+        setIsScrolled(true);
       } else {
-        setIsVisible(true);
+        setIsScrolled(false);
       }
-
-      setLastScrollY(currentScrollY);
     };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+  
 
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [lastScrollY]);
+  const toggleSidebar = (): void => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
+
+  const closeSidebar = (): void => {
+    setIsSidebarOpen(false);
+  };
 
   const handleLogout = async () => {
     await signOut({ redirect: false });
@@ -70,39 +77,26 @@ const Navbar: React.FC = () => {
     }, 1000);
   };
 
-  const NavLink: React.FC<{ item: any; onClick?: () => void }> = ({
-    item,
-    onClick,
-  }) => (
+  const NavLink: React.FC<{ item: any; onClick?: () => void }> = ({ item, onClick }) => (
     <Link
       href={item.href}
-      className="px-3 py-2 text-sm tracking-wide text-gray-200 hover:text-white transition-colors duration-200"
+      className="px-4 py-2 text-sm font-medium text-white hover:text-cyan-300 transition-colors duration-300"
       onClick={onClick}
-      style={{ fontFamily: "Helvetica Neue, Helvetica, Arial, sans-serif" }}
     >
       {item.name}
     </Link>
   );
 
-  const NavDropdown: React.FC<{ category: string; items: any[] }> = ({
-    category,
-    items,
-  }) => (
+  const NavDropdown: React.FC<{ category: string; items: any[] }> = ({ category, items }) => (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button
-          variant="ghost"
-          className="px-3 py-2 text-sm tracking-wide text-gray-200 hover:text-white font-normal"
-        >
-          {category} <ChevronDown className="ml-1 h-3 w-3" />
+        <Button variant="ghost" className="px-4 py-2 text-sm font-medium rounded-xl text-white hover:text-cyan-300">
+          {category} <ChevronDown className="ml-1 h-4 w-4" />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent 
-        className="bg-black/90 backdrop-blur-lg border border-white/10"
-        style={{zIndex: 100}} // Add higher z-index
-      >
+      <DropdownMenuContent className="bg-gray-800 border-gray-700 rounded-xl">
         {items.map((item) => (
-          <DropdownMenuItem key={item.name} className="hover:bg-white/5">
+          <DropdownMenuItem key={item.name} className="hover:bg-gray-700 rounded-xl">
             <NavLink item={item} />
           </DropdownMenuItem>
         ))}
@@ -110,139 +104,99 @@ const Navbar: React.FC = () => {
     </DropdownMenu>
   );
 
-  const AuthButton: React.FC<{
-    href: string;
-    onClick?: () => void;
-    children: React.ReactNode;
-  }> = ({ href, onClick, children }) => (
+  const AuthButton: React.FC<{ href: string; onClick?: () => void; children: React.ReactNode }> = ({ href, onClick, children }) => (
     <Link
       href={href}
       onClick={onClick}
-      className="px-4 py-2 text-sm tracking-wide text-white border border-white/20 hover:bg-white hover:text-black transition-all duration-200 rounded-none"
-      style={{ fontFamily: "Helvetica Neue, Helvetica, Arial, sans-serif" }}
+      className="px-4 py-2 text-sm font-medium text-white bg-gray-700 hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-colors duration-300 rounded"
     >
       {children}
     </Link>
   );
 
-  const isNavCategory = (
-    item: any
-  ): item is { category: string; items: any[] } => {
-    return "category" in item && "items" in item;
+  const isNavCategory = (item: any): item is { category: string; items: any[] } => {
+    return 'category' in item && 'items' in item;
   };
 
   return (
-    <nav
-      className={`fixed top-0 left-0 right-0 z-40 transition-transform duration-300 border-b ${
-        isVisible ? "translate-y-0" : "-translate-y-full"
-      } ${
-        isScrolled
-          ? "bg-black/90 backdrop-blur-lg border-white/10"
-          : "bg-transparent border-transparent"
-      }`}
-      style={{ fontFamily: "Helvetica Neue, Helvetica, Arial, sans-serif" }}
-    >
-      <div className="container mx-auto px-8">
-        <div className="flex justify-between items-center h-16">
-          <Link href="/" className="text-lg tracking-tight text-white">
+    <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled ? 'bg-black shadow-md' : 'bg-transparent'}`}>
+      <div className="container mx-auto px-6 py-4">
+        <div className="flex justify-between items-center">
+          <Link href="/" className="font-bold text-xl text-white">
             Socrates
           </Link>
-
-          <div className="hidden md:flex items-center space-x-6">
-            {navItems.map((item, index) =>
+          <div className="hidden md:flex items-center space-x-4">
+            {navItems.map((item, index) => (
               isNavCategory(item) ? (
-                <NavDropdown
-                  key={index}
-                  category={item.category}
-                  items={item.items}
-                />
+                <NavDropdown key={index} category={item.category} items={item.items} />
               ) : (
                 <NavLink key={index} item={item} />
               )
-            )}
-
+            ))}
             {loading ? (
-              <span className="text-sm text-gray-400">Loading...</span>
+              <span>Loading...</span>
             ) : session ? (
-              <div className="flex items-center space-x-4">
-                <AuthButton href="/u/profile">Profile</AuthButton>
-                <AuthButton href="#" onClick={handleLogout}>
-                  Logout
-                </AuthButton>
-              </div>
+              <>
+                <AuthButton href="/u/profile">User Profile</AuthButton>
+                <AuthButton href="#" onClick={handleLogout}>Logout</AuthButton>
+              </>
             ) : (
-              <div className="flex items-center space-x-4">
+              <>
                 <AuthButton href="/sign-in">Login</AuthButton>
                 <AuthButton href="/sign-up">Register</AuthButton>
-              </div>
+              </>
             )}
           </div>
-
+          
           <Button
-            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+            onClick={toggleSidebar}
             variant="ghost"
             size="icon"
-            className="md:hidden text-white"
+            className="md:hidden text-cyan-200 hover:text-cyan-300"
+            aria-label="Toggle menu"
           >
-            {isSidebarOpen ? (
-              <X className="h-5 w-5" />
-            ) : (
-              <Menu className="h-5 w-5" />
-            )}
+            {isSidebarOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
           </Button>
         </div>
       </div>
-
-      {/* Mobile Sidebar */}
       {isSidebarOpen && (
-        <div
-          className="fixed inset-0 bg-black/90 backdrop-blur-lg z-50"
-          onClick={() => setIsSidebarOpen(false)}
-        >
+        <div className="fixed inset-0 bg-black/50 z-40" onClick={closeSidebar}>
           <div
-            className="fixed right-0 top-0 h-full w-64 bg-black border-l border-white/10 shadow-lg z-50"
+            className="fixed right-0 top-0 h-full w-64 bg-gray-800 shadow-lg z-50 overflow-y-auto"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="p-6 space-y-6">
-              {navItems.map((item, index) =>
+            <div className="flex justify-end p-4">
+              <Button onClick={closeSidebar} variant="ghost" size="icon">
+                <X className="h-6 w-6 text-cyan-200" />
+              </Button>
+            </div>
+            <nav className="flex flex-col space-y-4 p-4">
+              {navItems.map((item, index) => (
                 isNavCategory(item) ? (
-                  <div key={index} className="space-y-2">
-                    <h3 className="text-xs uppercase tracking-widest text-gray-400">
-                      {item.category}
-                    </h3>
+                  <div key={index}>
+                    <h3 className="font-semibold text-sm text-gray-500 uppercase tracking-wider mb-2">{item.category}</h3>
                     {item.items.map((subItem) => (
-                      <NavLink
-                        key={subItem.name}
-                        item={subItem}
-                        onClick={() => setIsSidebarOpen(false)}
-                      />
+                      <NavLink key={subItem.name} item={subItem} onClick={closeSidebar} />
                     ))}
                   </div>
                 ) : (
-                  <NavLink
-                    key={index}
-                    item={item}
-                    onClick={() => setIsSidebarOpen(false)}
-                  />
+                  <NavLink key={index} item={item} onClick={closeSidebar} />
                 )
-              )}
-
+              ))}
               {loading ? (
-                <span className="text-sm text-gray-400">Loading...</span>
+                <span>Loading...</span>
               ) : session ? (
-                <div className="space-y-3">
-                  <AuthButton href="/u/profile">Profile</AuthButton>
-                  <AuthButton href="#" onClick={handleLogout}>
-                    Logout
-                  </AuthButton>
-                </div>
+                <>
+                  <AuthButton href="/profile">User Profile</AuthButton>
+                  <AuthButton href="#" onClick={handleLogout}>Logout</AuthButton>
+                </>
               ) : (
-                <div className="space-y-3">
+                <>
                   <AuthButton href="/sign-in">Login</AuthButton>
                   <AuthButton href="/sign-up">Register</AuthButton>
-                </div>
+                </>
               )}
-            </div>
+            </nav>
           </div>
         </div>
       )}
